@@ -1,0 +1,30 @@
+Figure 1:
+
+x=0:pi/100:2*pi;
+y=sin(x);
+plot(x,y)
+
+Figure 2:
+
+x=0:pi/100:2*pi;
+y=sin(x);
+plot(x,y)
+xlabel('x');
+ylabel('y');
+title('y=sin(x)')
+x1=0:pi/100:2*pi;
+y1=sin(x1);
+y2=sin(x1-0.25);
+y3=sin(x1-0.5);
+plot(x1,y1,x1,y2,x1,y3)
+
+Figure 3:
+
+t=-pi:pi/100:pi;
+s=cos(t);
+plot(t,s)
+axis([-pi pi -1 1])
+xlabel('-\pi \leq t \leq \pi')
+ylabel('cos(t)')
+title('The Cosine Function')
+text(-2, -0.5,'This is a note at position (-2,-0.5)')

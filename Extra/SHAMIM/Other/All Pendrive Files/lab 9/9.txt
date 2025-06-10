@@ -1,0 +1,91 @@
+>> % Parameters
+F = 8;
+G = 1;
+fs = 1000; % Sampling frequency
+t = 0:1/fs:1; % Time vector
+
+% Message signals
+am1 = F + 2;
+am2 = F + 5;
+am3 = F + 8;
+am4 = F + 11;
+
+fm1 = G + 1;
+fm2 = G + 2;
+fm3 = G + 3;
+fm4 = G + 4;
+
+mt1 = am1 * cos(2 * pi * fm1 * t);
+mt2 = am2 * cos(2 * pi * fm2 * t);
+mt3 = am3 * cos(2 * pi * fm3 * t);
+mt4 = am4 * cos(2 * pi * fm4 * t);
+
+% Carrier signals for amplitude modulation
+fc1 = 100;
+fc2 = 150;
+fc3 = 200;
+fc4 = 250;
+
+% Modulation
+st1 = am1 * cos(2 * pi * fc1 * t) .* cos(2 * pi * fm1 * t);
+st2 = am2 * cos(2 * pi * fc2 * t) .* cos(2 * pi * fm2 * t);
+st3 = am3 * cos(2 * pi * fc3 * t) .* cos(2 * pi * fm3 * t);
+st4 = am4 * cos(2 * pi * fc4 * t) .* cos(2 * pi * fm4 * t);
+
+% Multiplexing
+st = st1 + st2 + st3 + st4;
+
+% Demultiplexing
+f_cutoff_low = 50;
+f_cutoff_high = 250;
+
+[b, a] = butter(6, [f_cutoff_low, f_cutoff_high] / (fs / 2), 'bandpass');
+
+rt = filtfilt(b, a, st);
+
+% Demodulation
+demt1 = rt .* cos(2 * pi * fc1 * t);
+demt2 = rt .* cos(2 * pi * fc2 * t);
+demt3 = rt .* cos(2 * pi * fc3 * t);
+demt4 = rt .* cos(2 * pi * fc4 * t);
+
+% Lowpass filtering
+[b_lp, a_lp] = butter(6, f_cutoff_high / (fs / 2), 'low');
+mt1_recovered = filtfilt(b_lp, a_lp, demt1);
+mt2_recovered = filtfilt(b_lp, a_lp, demt2);
+mt3_recovered = filtfilt(b_lp, a_lp, demt3);
+mt4_recovered = filtfilt(b_lp, a_lp, demt4);
+
+% Plot the results
+figure;
+
+subplot(5, 1, 1);
+plot(t, mt1);
+title('Message Signal 1');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+subplot(5, 1, 2);
+plot(t, mt2);
+title('Message Signal 2');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+subplot(5, 1, 3);
+plot(t, mt3);
+title('Message Signal 3');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+subplot(5, 1, 4);
+plot(t, mt4);
+title('Message Signal 4');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+subplot(5, 1, 5);
+plot(t, mt1_recovered, t, mt2_recovered, t, mt3_recovered, t, mt4_recovered);
+legend('Recovered Signal 1', 'Recovered Signal 2', 'Recovered Signal 3', 'Recovered Signal 4');
+title('Recovered Message Signals');
+xlabel('Time (s)');
+ylabel('Amplitude');

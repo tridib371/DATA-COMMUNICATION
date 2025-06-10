@@ -1,0 +1,45 @@
+Part (b):
+Received analog signal with SNR of 30 dB
+receivedSignal = awgn(analogSignal, 30); % SNR of 30 dB
+
+% Plot the received signal
+figure;
+plot(t, receivedSignal, 'LineWidth', 2);
+title('Received Analog Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+
+ % Part (c): Recover the text from the received signal
+
+% Recovered binary data
+recoveredBinaryData = zeros(size(binaryDataNumeric));
+
+for i = 1:length(textMessage)
+    % Use a simple threshold to decide 0 or 1
+    if max(receivedSignal((i-1)*fs+1:i*fs)) > 0
+        recoveredBinaryData(i) = 1;
+    else
+        recoveredBinaryData(i) = 0;
+    end
+end
+
+% Convert binary data back to text
+recoveredBinaryString = num2str(recoveredBinaryData);
+binaryStringLength = length(recoveredBinaryString);
+
+% Convert binary string to decimal in chunks of 52 bits
+chunkSize = 52;
+numChunks = ceil(binaryStringLength / chunkSize);
+recoveredDecimal = '';
+
+for i = 1:numChunks
+    startIndex = (i-1) * chunkSize + 1;
+    endIndex = min(i * chunkSize, binaryStringLength);
+    chunk = recoveredBinaryString(startIndex:endIndex);
+    recoveredDecimal = [recoveredDecimal, bin2dec(chunk), ' '];
+end
+
+% Display the recovered text
+disp('Recovered Text:');
+disp(recoveredDecimal);

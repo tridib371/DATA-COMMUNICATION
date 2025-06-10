@@ -1,0 +1,12 @@
+Course:
+Sec:
+Exp. Name:
+Exp. No:
+Group No:
+Name - ID :
+
+Abstract(From lab manual)
+Theory(From lab manual)
+Results(Code + Figure Screenshots with Figure name)
+Discussion & Conclusion(Together paragraph 3-4 lines)
+Reference(IEEE Format)

@@ -1,0 +1,84 @@
+>> %ID : 
+A=;
+B=;
+C=;
+D=;
+E=;
+F=;
+G=;
+H=;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Analog to Digital Conversion
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+time_duration = 0.2;
+%% Analog-like signal's representation
+% Analog signal generation is not possible in MATLAB
+
+a1 = B + 1;
+a2 = C + 3;
+a3 = D + 2;
+f1 = E + 5;
+f2 = F + 7;
+f3 = G + 1;
+
+a=[a1 a2 a3];
+f=[f1 f2 f3];
+
+analog_t = 0:0.0001:time_duration;
+>> analog_sig = a1*sin(2*pi*f1*analog_t) + a2*cos(2*pi*f2*analog_t) + a3*cos(2*pi*f3*analog_t);
+>> figure
+hold on
+subplot(1,2,1)
+plot(analog_t, analog_sig,'linewidth',1.5)
+grid on
+xlabel('time in seconds')
+ylabel('amplitude in volts')
+title('analog signal')
+
+%% Sampling Frequency
+fs = 250;
+ts = 1/fs;
+
+%% Sampling
+samp_t = 0:1/fs:time_duration;
+samp_sig = a1*sin(2*pi*f1*samp_t) +a2*cos(2*pi*f2*samp_t) + a3*cos(2*pi*f3*samp_t);
+hold on
+subplot(1,2,2)
+plot(samp_t, samp_sig,'linewidth',1.5)
+grid on
+xlabel('time in seconds')
+ylabel('amplitude in volts')
+title(['sampled signal for ',num2str(fs),' Hz sampling frequency'])
+
+%% Levels for Quantization
+L = 8;
+
+%% Quantizing
+delta = (max(samp_sig) - min(samp_sig))/(L-1); %step size
+quant_sig = min(samp_sig) + round((samp_sig-min(samp_sig))/delta)*delta; % quantized signal
+figure
+subplot(1,2,1)
+plot(samp_t, samp_sig,'linewidth',1.5)
+grid on
+xlabel('time in seconds')
+ylabel('amplitude in volts')
+title('sampled signal')
+subplot(1,2,2)
+plot(samp_t, quant_sig,'linewidth',1.5);
+xlabel('time')
+ylabel('amplitude')
+title('quantized samples')
+
+%% Number of Bits/Sample
+nb = log2(L);
+
+%% Encoding
+i = round((samp_sig-min(samp_sig))/delta); % index for encoding
+dig_data_matrix = dec2bin(i,nb); % encoded binary bits are as a matrix here
+dig_data = reshape(dig_data_matrix',1,[]); % encoded binary bits are as an array here
+disp(['The index values for encoding from quantization of the sampled signal are:',num2str(i)])
+disp(['The converted bits from the input analog signal are: ',num2str(dig_data)])
+The index values for encoding from quantization of the sampled signal are:7  7  7  6  5  4  2  1  1  0  0  1  1  2  2  3  3  3  3  3  3  2  2  2  3  3  4  5  5  6  6  6  6  5  4  3  2  1  0  0  0  0  1  2  2  3  4  4  4  4  4
+The converted bits from the input analog signal are: 111111111110101100010001001000000001001010010011011011011011011010010010011011100101101110110110110101100011010001000000000000001010010011100100100100100

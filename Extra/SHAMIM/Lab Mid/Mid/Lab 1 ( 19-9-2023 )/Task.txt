@@ -1,0 +1,17 @@
+t=linspace(0,2*pi,1000);
+A1 =2;
+A2=4;
+A3=3;
+phi=3*pi;
+signal1=A1*cos(t+phi);
+signal2=A2*cos(t+phi);
+signal3=A3*cos(t+phi);
+plot(t,signal1,'r','LineWidth',2);
+hold on;
+plot(t,signal2,'g','LineWidth',2);
+plot(t,signal3,'b','LineWidth',2);
+xlabel('Time');
+ylabel('Amplitude');
+title('Cosine Signals with Phase Difference of 3pi');
+legend('Signal 1','Signal 2','Signal 3');
+grid on;
